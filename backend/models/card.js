@@ -5,21 +5,21 @@ const Card = new schema({
 
   cardName : {
        type : String,
-       required : true
+    
        },
   cardNo : {
        type : String,
-       required : true
+      
   },
   
   expireDate : {
        type : String,
-       required : true
+      
        },
 
 cvv : {
        type : String,
-       required : true
+       
        },
 
 

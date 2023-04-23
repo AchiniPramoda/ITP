@@ -1,10 +1,12 @@
-
-import React from "react";
+import React, { useState } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Cards from "react-credit-cards";
+import "react-credit-cards/es/styles-compiled.css";
 import axios from "axios";
-
 import './card.css';
 import  {Alert} from './Alert';
 import Validation from './validationCard';
+import Navbar from "./NavBar";
 
 
 export default class Add extends React.Component{
@@ -13,15 +15,17 @@ export default class Add extends React.Component{
         super(props);
         
         this.state = {            
-              cardName : '',
-              cardNo : '',
-              expireDate : '',
-              cvv : '',
            
+              cardNo : "",
+              cardName : "",
+              expireDate : "",
+              cvv : "",  
+              
         }
        }
 
        handleError = (err) => {
+
               if (err) {
                   if (err.response) {
                       if (err.response.status === 404) {
@@ -34,108 +38,104 @@ export default class Add extends React.Component{
                   }
               }
           }
-          onChange = (e) => {        
-              this.setState({[e.target.id]: e.target.value});
-              console.log(e.target.value);
-          }
-      
-      
-        
-      
-      
-      
-          onSubmit =  (e) => {
-              e.preventDefault();
-      
-              const result = Validation({
-                       cardName : this.state.cardName,
-                             cardNo : this.state.cardNo,
-                                   expireDate : this.state.expireDate,
-                                               cvv : this.state.cvv,
+               onChange = (e) => {
+                       this.setState({[e.target.id]: e.target.value});
+                       console.log(e.target.value);
+                         }
 
-                  
-              });
-      
-             
-           if(result.status){
-             
-              const card = {
-                  cardName : this.state.cardName,
-                  cardNo : this.state.cardNo,
-                  expireDate : this.state.expireDate,
-                  cvv : this.state.cvv,
-              }
-      
-              axios.post('http://localhost:8070/card/add', card)
-              .then(res => console.log(res.data));
-      
-              this.setState({
-                  cardName : '',
-                  cardNo : '',
-                  expireDate : '',
-                  cvv : '',
-              })
-              Alert("success", "Card Added Successfully");
-                 }else{
-                       Alert("error", "Something went wrong.", result.error)        
-                       }
-               }
+               onSubmit =  (e) => {
 
-       render(){
+                             e.preventDefault();
+       
+                             const result = Validation({
+                                    cardNo : this.state.cardNo,
+                                    cardName : this.state.cardName,
+                                    expireDate : this.state.expireDate,
+                                    cvv : this.state.cvv,
+                             });
+       
+                             if(result.error){
+                                    Alert("error", "Something went wrong.", result.error.details[0].message)
+                                    return;
+                             }
+       
+                             const card = {
+                                    cardNo : this.state.cardNo,
+                                    cardName : this.state.cardName,
+                                    expireDate : this.state.expireDate,
+                                    cvv : this.state.cvv,
+                             }
+       
+                             axios.post('http://localhost:8088/card/add', card).then(res => {
+                                    Alert("success", "Success", "Card Added Successfully")
+                                   //  this.props.history.push('/cardview');
+                             }).catch(err => {
+                                    this.handleError(err);
+                             });
+       
+                      }
 
-              return(
-              <div className="container">
-                     <div className="row">
-                     <div className="col-md-6 mt-5 mx-auto">
-                            <form noValidate onSubmit={this.onSubmit}>
-                                   <h1 className="h3 mb-3 font-weight-normal">Add Card</h1>
-                                   <div className="form-group">
-                                   <label htmlFor="cardName">Card Name</label>
-                                   <input type="text"
-                                   className="form-control"
-                                   name="cardName"
-                                   placeholder="Enter Card Name"
-                                   value={this.state.cardName}
-                                   onChange={this.onChange}
-                                   />
-                                   </div>
-                                   <div className="form-group">
-                                   <label htmlFor="cardNo">Card No</label>
-                                   <input type="text"
-                                   className="form-control"
-                                   name="cardNo"
-                                   placeholder="Enter Card No"
-                                   value={this.state.cardNo}
-                                   onChange={this.onChange}
-                                   />
-                                   </div>
-                                   <div className="form-group">
-                                   <label htmlFor="expireDate">Expire Date</label>
-                                   <input type="text"
-                                   className="form-control"
-                                   name="expireDate"
-                                   placeholder="Enter Expire Date"
-                                   value={this.state.expireDate}
-                                   onChange={this.onChange}
-                                   />
-                                   </div>
-                                   <div className="form-group">
-                                   <label htmlFor="cvv">CVV</label>
-                                   <input type="text"
-                                   className="form-control"
-                                   name="cvv"
-                                   placeholder="Enter CVV"
-                                   value={this.state.cvv}
-                                   onChange={this.onChange}
-                                   />
-                                   </div>
-                                   <button type="submit" className="btn btn-lg btn-primary btn-block">
-                                   Add Card
-                                   </button>
-                            </form>
-                     </div>
-                     </div>
-              </div>
+       render() {
+
+              return (
+                     
+                      <div>
+                                  <Navbar/>
+                           <div className="container">
+                                 <div clasName="rccs__card rccs__card--unknown">
+                                                 <Cards
+                                                 cvc={this.state.cvv}
+                                                 expiry={this.state.expireDate}
+                                                 focused={this.state.focus}
+                                                 name={this.state.cardName}
+                                                 number={this.state.cardNo}
+                                                 />
+                                          </div>
+                                          
+      <br />
+                                          
+                                          
+                                                 <form onSubmit={this.onSubmit}>
+                                                 <div className="row">
+                                                 <div className="col-sm-11">
+                                                               <label htmlFor="cardNo">Card Number</label>
+                                                               <input type="text" className="form-control" id="cardNo" placeholder="Enter Card Number" onChange={this.onChange} value={this.state.cardNo}/>
+                                                 </div>
+                                                 </div>
+                                                 <br/>
+                                                 <div className="row">
+                                                 <div className="col-sm-11">
+                                                               <label htmlFor="cardName">Name on Card</label>
+                                                               <input type="text" className="form-control" id="cardName" placeholder="Enter Name on Card" onChange={this.onChange} value={this.state.cardName}/>
+                                                 </div>
+                                                 </div>
+                                                 <br/>
+                                                 <div className="row">
+                                                 <div className="col-sm-6">
+                                                               <label htmlFor="expireDate">Expire Date</label>
+                                                               <input type="text" className="form-control" id="expireDate" placeholder="Enter Expire Date" onChange={this.onChange} value={this.state.expireDate}/>
+                                                 </div>
+                                                 
+                                                 
+                                                 <div className="col-sm-5">
+                                                               <label htmlFor="cvv">CVV</label>
+                                                               <input type="text" className="form-control" id="cvv" placeholder="Enter CVV" onChange={this.onChange} value={this.state.cvv}/>
+                                                        
+                                                 </div>
+                                                 <br/>
+                                                 <br/>
+                                                 <br/>
+                                                        <button type="submit" className="btAdd">Submit</button>
+                                                        <br/>
+                                                        <br/>
+                                                        </div>
+                              
+                                                 </form>
+                                          </div>
+                                   </div> 
+                                   
+                         
+                    
               )
-       }      
+       }
 }

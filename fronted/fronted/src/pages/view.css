@@ -1,0 +1,42 @@
+.my{
+       color: #de3232;
+       margin-left: 2rem;
+}
+
+
+     
+button {
+       
+       text-decoration: none;
+       font-family: arial;
+       border-radius: 4px;
+       font-size: 12px;
+       text-align: center;
+       letter-spacing: 1.5px;
+       text-transform: uppercase;
+       padding: 20px 40px;
+       transition: 0.5s;
+       background-size: 200% auto;
+       margin-bottom: 4rem;
+       background-color: #636363;
+       color: #fff;
+       margin-top: 4rem;
+       margin-left: 30rem;
+       width: 40%;
+       }
+
+     .success
+       {
+         color: #32de57;
+         margin-left: 2rem;
+         margin: 0 auto;
+       }
+
+       .danger
+       {
+         color: #de3232;
+         margin-left: 2rem;
+         
+         margin: 0 auto;
+         
+       }
