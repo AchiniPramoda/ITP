@@ -21,16 +21,18 @@ router.post('/add', (req,res) => {
 );
 
 
-router.get('/', (req,res) => {
+router.get('/get',async (res) => {
 
-       try{
-              const card =  Card.find();
-              res.status(200).json(card);
-       }catch(err){
-              res.status(500).json({error : err});
+              try{
+                     const card =  await Card.find();
+                    console.log(card);
+              }catch(err){
+                     console.log(err);
+              }
        }
-}
 );
+
+
 
 router.get('/:id', (req,res) => {
        
