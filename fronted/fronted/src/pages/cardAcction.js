@@ -21,7 +21,7 @@ const Actions = (props) => {
                      showConfirmButton: false,
                      timer: 1500
               });
-              props.history.push('/cardView');
+            window.location.href = "/viewCard";
               } catch (err) {
               console.log(err);
               }      
